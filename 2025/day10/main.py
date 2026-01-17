@@ -1,4 +1,4 @@
-import math
+import math, z3
 
 def read_file(filename):
     machines = []
@@ -54,5 +54,24 @@ def solve_p1(machines):
         presses += get_min_presses_for_goal_state(goal_state,buttons)
     return presses
 
+#HyperNeutrino's solution
+def solve_p2(machines):
+    presses = 0
+    for _, buttons, goal_jolts in machines:
+        o = z3.Optimize()
+        vars = z3.Ints(f"n{i}" for i in range(len(buttons)))
+        for var in vars: o.add(var >= 0)
+        for i, jolt in enumerate(goal_jolts):
+            equation = 0
+            for bidx, button in enumerate(buttons):
+                if i in button:
+                    equation += vars[bidx]
+            o.add(equation == jolt)
+        o.minimize(sum(vars))
+        o.check()
+        presses += o.model().eval(sum(vars)).as_long()
+    return presses
 
-print(solve_p1(read_file("input.txt")))
+
+#print(solve_p1(read_file("input.txt")))
+print(solve_p2(read_file("input.txt")))
