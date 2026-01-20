@@ -57,6 +57,6 @@ def calculate_paths_p2(conns):
     )
 
 
-#print("part 1: ", calculate_paths_p1(read_file("input.txt")))
+print("part 1: ", calculate_paths_p1(read_file("input.txt")))
 
 print("part 2: ", calculate_paths_p2(read_file("input.txt")))
